@@ -1,0 +1,756 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <title>Alta de operarios</title> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+</head> 
+<body> 
+
+<div data-role="page">
+
+  <div data-role="header">
+  <h1>Alta de operarios</h1>
+  </div><!-- /header -->
+
+  <div data-role="content">
+    <div id="form">
+      <div data-role="fieldcontain">
+		    <label for="client" class="select">Cliente:</label>
+		    <select name="client" id="client">
+		      <option value="0">Seleccione</option>
+		      <option value="1">Cliente 1</option>
+		      <option value="2">Cliente 2</option>
+		      <option value="3">Cliente 3</option>
+		    </select>
+			</div>
+      <div data-role="fieldcontain">
+        <label for="name">Nombre:</label>
+        <input type="text" name="name" id="name" value=""  />
+      </div>
+      <div data-role="fieldcontain">
+        <label for="lastname">Apellido:</label>
+        <input type="text" name="lastname" id="lastname" value=""  />
+      </div>
+      <div data-role="fieldcontain">
+        <label for="machine">Equipo que opera:</label>
+        <input type="text" name="machine" id="machine" value=""  />
+        <a href="#" data-role="button" data-icon="plus" id="addMachine">Agregar</a>
+      </div>
+      <div data-role="fieldcontain">
+        <ul data-role="listview" id="ulList">
+					
+				</ul>
+      </div>
+      <!-- <div data-role="fieldcontain"> -->
+	      <ul data-role="listview" id="itemsListInstruccion">
+					<li data-role="list-divider">
+						Curso de instruccion: OPERACION EQUIPOS DE IZAJE
+					</li>
+					<li>
+						<input type="checkbox" name="checkbox-0" id="checkbox-mini-0" class="custom" data-mini="true" />
+						<label for="checkbox-mini-0">El operador ha participado activamente en el curso.</label>
+					</li>
+					<li>
+						<input type="checkbox" name="checkbox-1" id="checkbox-mini-1" class="custom" data-mini="true" />
+						<label for="checkbox-mini-1">El operador no ha participado en el curso, pero posee conocimientos teoricos satisfactorios.</label>
+					</li>
+					<li>
+						<input type="checkbox" name="checkbox-2" id="checkbox-mini-2" class="custom" data-mini="true" />
+						<label for="checkbox-mini-2">Renovacion de carnet</label>
+					</li>
+					<li data-role="list-divider">
+						En base a los resultados obtenidos en la evaluacion:
+					</li>
+					<li>
+						<input type="checkbox" name="checkbox-3" id="checkbox-mini-3" class="custom" data-mini="true" />
+						<label for="checkbox-mini-3">El instructor recomienda la calificación del operador. Se habilite el operador en forma provisoria para operar por 30 (treinta) días a partir de la fecha de acta.</label>
+					</li>
+					<li>
+						<input type="checkbox" name="checkbox-4" id="checkbox-mini-4" class="custom" data-mini="true" />
+						<label for="checkbox-mini-4">El instructor NO recomienda la calificación del operador.</label>
+					</li>
+					<li>
+						<input type="checkbox" name="checkbox-5" id="checkbox-mini-5" class="custom" data-mini="true" />
+						<label for="checkbox-mini-5">Calificado.</label>
+					</li>
+					<li>
+		        <label for="observaciones">Observaciones:</label>
+						<textarea name="observaciones" id="observaciones"></textarea>
+					</li>
+					<li data-role="list-divider">
+						Items
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Rutina diaria:</legend>
+				    	<input type="radio" name="rutina-diaria" id="rutina-diaria-1" value="1" checked="checked" />
+				    	<label for="rutina-diaria-1">1</label>
+
+							<input type="radio" name="rutina-diaria" id="rutina-diaria-2" value="2"  />
+				    	<label for="rutina-diaria-2">2</label>
+				    	
+				    	<input type="radio" name="rutina-diaria" id="rutina-diaria-3" value="3"  />
+				    	<label for="rutina-diaria-3">3</label>
+
+				    	<input type="radio" name="rutina-diaria" id="rutina-diaria-4" value="4"  />
+				    	<label for="rutina-diaria-4">4</label>
+
+				    	<input type="radio" name="rutina-diaria" id="rutina-diaria-5" value="5"  />
+				    	<label for="rutina-diaria-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Mantenimiento basico:</legend>
+				    	<input type="radio" name="mantenimiento-basico" id="mantenimiento-basico-1" value="1" checked="checked" />
+				    	<label for="mantenimiento-basico-1">1</label>
+
+							<input type="radio" name="mantenimiento-basico" id="mantenimiento-basico-2" value="2"  />
+				    	<label for="mantenimiento-basico-2">2</label>
+				    	
+				    	<input type="radio" name="mantenimiento-basico" id="mantenimiento-basico-3" value="3"  />
+				    	<label for="mantenimiento-basico-3">3</label>
+
+				    	<input type="radio" name="mantenimiento-basico" id="mantenimiento-basico-4" value="4"  />
+				    	<label for="mantenimiento-basico-4">4</label>
+
+				    	<input type="radio" name="mantenimiento-basico" id="mantenimiento-basico-5" value="5"  />
+				    	<label for="mantenimiento-basico-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Elementos básicos de izaje y accesorios:</legend>
+				    	<input type="radio" name="izaje-accesorios" id="izaje-accesorios-1" value="1" checked="checked" />
+				    	<label for="izaje-accesorios-1">1</label>
+
+							<input type="radio" name="izaje-accesorios" id="izaje-accesorios-2" value="2"  />
+				    	<label for="izaje-accesorios-2">2</label>
+				    	
+				    	<input type="radio" name="izaje-accesorios" id="izaje-accesorios-3" value="3"  />
+				    	<label for="izaje-accesorios-3">3</label>
+
+				    	<input type="radio" name="izaje-accesorios" id="izaje-accesorios-4" value="4"  />
+				    	<label for="izaje-accesorios-4">4</label>
+
+				    	<input type="radio" name="izaje-accesorios" id="izaje-accesorios-5" value="5"  />
+				    	<label for="izaje-accesorios-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Limpieza e higiene del equipo:</legend>
+				    	<input type="radio" name="limpieza-higiene" id="limpieza-higiene-1" value="1" checked="checked" />
+				    	<label for="limpieza-higiene-1">1</label>
+
+							<input type="radio" name="limpieza-higiene" id="limpieza-higiene-2" value="2"  />
+				    	<label for="limpieza-higiene-2">2</label>
+				    	
+				    	<input type="radio" name="limpieza-higiene" id="limpieza-higiene-3" value="3"  />
+				    	<label for="limpieza-higiene-3">3</label>
+
+				    	<input type="radio" name="limpieza-higiene" id="limpieza-higiene-4" value="4"  />
+				    	<label for="limpieza-higiene-4">4</label>
+
+				    	<input type="radio" name="limpieza-higiene" id="limpieza-higiene-5" value="5"  />
+				    	<label for="limpieza-higiene-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Buen uso del equipo:</legend>
+				    	<input type="radio" name="uso-equipo" id="uso-equipo-1" value="1" checked="checked" />
+				    	<label for="uso-equipo-1">1</label>
+
+							<input type="radio" name="uso-equipo" id="uso-equipo-2" value="2"  />
+				    	<label for="uso-equipo-2">2</label>
+				    	
+				    	<input type="radio" name="uso-equipo" id="uso-equipo-3" value="3"  />
+				    	<label for="uso-equipo-3">3</label>
+
+				    	<input type="radio" name="uso-equipo" id="uso-equipo-4" value="4"  />
+				    	<label for="uso-equipo-4">4</label>
+
+				    	<input type="radio" name="uso-equipo" id="uso-equipo-5" value="5"  />
+				    	<label for="uso-equipo-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Operación segura:</legend>
+				    	<input type="radio" name="operacion-segura" id="operacion-segura-1" value="1" checked="checked" />
+				    	<label for="operacion-segura-1">1</label>
+
+							<input type="radio" name="operacion-segura" id="operacion-segura-2" value="2"  />
+				    	<label for="operacion-segura-2">2</label>
+				    	
+				    	<input type="radio" name="operacion-segura" id="operacion-segura-3" value="3"  />
+				    	<label for="operacion-segura-3">3</label>
+
+				    	<input type="radio" name="operacion-segura" id="operacion-segura-4" value="4"  />
+				    	<label for="operacion-segura-4">4</label>
+
+				    	<input type="radio" name="operacion-segura" id="operacion-segura-5" value="5"  />
+				    	<label for="operacion-segura-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Señales de tránsito:</legend>
+				    	<input type="radio" name="transito" id="transito-1" value="1" checked="checked" />
+				    	<label for="transito-1">1</label>
+
+							<input type="radio" name="transito" id="transito-2" value="2"  />
+				    	<label for="transito-2">2</label>
+				    	
+				    	<input type="radio" name="transito" id="transito-3" value="3"  />
+				    	<label for="transito-3">3</label>
+
+				    	<input type="radio" name="transito" id="transito-4" value="4"  />
+				    	<label for="transito-4">4</label>
+
+				    	<input type="radio" name="transito" id="transito-5" value="5"  />
+				    	<label for="transito-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Señales de maniobras de trabajo:</legend>
+				    	<input type="radio" name="trabajo" id="trabajo-1" value="1" checked="checked" />
+				    	<label for="trabajo-1">1</label>
+
+							<input type="radio" name="trabajo" id="trabajo-2" value="2"  />
+				    	<label for="trabajo-2">2</label>
+				    	
+				    	<input type="radio" name="trabajo" id="trabajo-3" value="3"  />
+				    	<label for="trabajo-3">3</label>
+
+				    	<input type="radio" name="trabajo" id="trabajo-4" value="4"  />
+				    	<label for="trabajo-4">4</label>
+
+				    	<input type="radio" name="trabajo" id="trabajo-5" value="5"  />
+				    	<label for="trabajo-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Documentación del equipo:</legend>
+				    	<input type="radio" name="documentacion-equipo" id="documentacion-equipo-1" value="1" checked="checked" />
+				    	<label for="documentacion-equipo-1">1</label>
+
+							<input type="radio" name="documentacion-equipo" id="documentacion-equipo-2" value="2"  />
+				    	<label for="documentacion-equipo-2">2</label>
+				    	
+				    	<input type="radio" name="documentacion-equipo" id="documentacion-equipo-3" value="3"  />
+				    	<label for="documentacion-equipo-3">3</label>
+
+				    	<input type="radio" name="documentacion-equipo" id="documentacion-equipo-4" value="4"  />
+				    	<label for="documentacion-equipo-4">4</label>
+
+				    	<input type="radio" name="documentacion-equipo" id="documentacion-equipo-5" value="5"  />
+				    	<label for="documentacion-equipo-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Técnicas de conducción:</legend>
+				    	<input type="radio" name="tecnica-conduccion" id="tecnica-conduccion-1" value="1" checked="checked" />
+				    	<label for="tecnica-conduccion-1">1</label>
+
+							<input type="radio" name="tecnica-conduccion" id="tecnica-conduccion-2" value="2"  />
+				    	<label for="tecnica-conduccion-2">2</label>
+				    	
+				    	<input type="radio" name="tecnica-conduccion" id="tecnica-conduccion-3" value="3"  />
+				    	<label for="tecnica-conduccion-3">3</label>
+
+				    	<input type="radio" name="tecnica-conduccion" id="tecnica-conduccion-4" value="4"  />
+				    	<label for="tecnica-conduccion-4">4</label>
+
+				    	<input type="radio" name="tecnica-conduccion" id="tecnica-conduccion-5" value="5"  />
+				    	<label for="tecnica-conduccion-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Técnicas de operación:</legend>
+				    	<input type="radio" name="tecnica-operacion" id="tecnica-operacion-1" value="1" checked="checked" />
+				    	<label for="tecnica-operacion-1">1</label>
+
+							<input type="radio" name="tecnica-operacion" id="tecnica-operacion-2" value="2"  />
+				    	<label for="tecnica-operacion-2">2</label>
+				    	
+				    	<input type="radio" name="tecnica-operacion" id="tecnica-operacion-3" value="3"  />
+				    	<label for="tecnica-operacion-3">3</label>
+
+				    	<input type="radio" name="tecnica-operacion" id="tecnica-operacion-4" value="4"  />
+				    	<label for="tecnica-operacion-4">4</label>
+
+				    	<input type="radio" name="tecnica-operacion" id="tecnica-operacion-5" value="5"  />
+				    	<label for="tecnica-operacion-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Coordinación de maniobras combinadas:</legend>
+				    	<input type="radio" name="coordinacion-maniobras" id="coordinacion-maniobras-1" value="1" checked="checked" />
+				    	<label for="coordinacion-maniobras-1">1</label>
+
+							<input type="radio" name="coordinacion-maniobras" id="coordinacion-maniobras-2" value="2"  />
+				    	<label for="coordinacion-maniobras-2">2</label>
+				    	
+				    	<input type="radio" name="coordinacion-maniobras" id="coordinacion-maniobras-3" value="3"  />
+				    	<label for="coordinacion-maniobras-3">3</label>
+
+				    	<input type="radio" name="coordinacion-maniobras" id="coordinacion-maniobras-4" value="4"  />
+				    	<label for="coordinacion-maniobras-4">4</label>
+
+				    	<input type="radio" name="coordinacion-maniobras" id="coordinacion-maniobras-5" value="5"  />
+				    	<label for="coordinacion-maniobras-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Maniobras de riesgo:</legend>
+				    	<input type="radio" name="maniobras-riesgo" id="maniobras-riesgo-1" value="1" checked="checked" />
+				    	<label for="maniobras-riesgo-1">1</label>
+
+							<input type="radio" name="maniobras-riesgo" id="maniobras-riesgo-2" value="2"  />
+				    	<label for="maniobras-riesgo-2">2</label>
+				    	
+				    	<input type="radio" name="maniobras-riesgo" id="maniobras-riesgo-3" value="3"  />
+				    	<label for="maniobras-riesgo-3">3</label>
+
+				    	<input type="radio" name="maniobras-riesgo" id="maniobras-riesgo-4" value="4"  />
+				    	<label for="maniobras-riesgo-4">4</label>
+
+				    	<input type="radio" name="maniobras-riesgo" id="maniobras-riesgo-5" value="5"  />
+				    	<label for="maniobras-riesgo-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Sensibilidad en las manos:</legend>
+				    	<input type="radio" name="sensibilidad-mano" id="sensibilidad-mano-1" value="1" checked="checked" />
+				    	<label for="sensibilidad-mano-1">1</label>
+
+							<input type="radio" name="sensibilidad-mano" id="sensibilidad-mano-2" value="2"  />
+				    	<label for="sensibilidad-mano-2">2</label>
+				    	
+				    	<input type="radio" name="sensibilidad-mano" id="sensibilidad-mano-3" value="3"  />
+				    	<label for="sensibilidad-mano-3">3</label>
+
+				    	<input type="radio" name="sensibilidad-mano" id="sensibilidad-mano-4" value="4"  />
+				    	<label for="sensibilidad-mano-4">4</label>
+
+				    	<input type="radio" name="sensibilidad-mano" id="sensibilidad-mano-5" value="5"  />
+				    	<label for="sensibilidad-mano-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Diagramas de carga de izaje:</legend>
+				    	<input type="radio" name="diagrama-carga-izaje" id="diagrama-carga-izaje-1" value="1" checked="checked" />
+				    	<label for="diagrama-carga-izaje-1">1</label>
+
+							<input type="radio" name="diagrama-carga-izaje" id="diagrama-carga-izaje-2" value="2"  />
+				    	<label for="diagrama-carga-izaje-2">2</label>
+				    	
+				    	<input type="radio" name="diagrama-carga-izaje" id="diagrama-carga-izaje-3" value="3"  />
+				    	<label for="diagrama-carga-izaje-3">3</label>
+
+				    	<input type="radio" name="diagrama-carga-izaje" id="diagrama-carga-izaje-4" value="4"  />
+				    	<label for="diagrama-carga-izaje-4">4</label>
+
+				    	<input type="radio" name="diagrama-carga-izaje" id="diagrama-carga-izaje-5" value="5"  />
+				    	<label for="diagrama-carga-izaje-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Maniobras a máxima distancia:</legend>
+				    	<input type="radio" name="maniobra-max-distancia" id="maniobra-max-distancia-1" value="1" checked="checked" />
+				    	<label for="maniobra-max-distancia-1">1</label>
+
+							<input type="radio" name="maniobra-max-distancia" id="maniobra-max-distancia-2" value="2"  />
+				    	<label for="maniobra-max-distancia-2">2</label>
+				    	
+				    	<input type="radio" name="maniobra-max-distancia" id="maniobra-max-distancia-3" value="3"  />
+				    	<label for="maniobra-max-distancia-3">3</label>
+
+				    	<input type="radio" name="maniobra-max-distancia" id="maniobra-max-distancia-4" value="4"  />
+				    	<label for="maniobra-max-distancia-4">4</label>
+
+				    	<input type="radio" name="maniobra-max-distancia" id="maniobra-max-distancia-5" value="5"  />
+				    	<label for="maniobra-max-distancia-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Maniobras combinadas:</legend>
+				    	<input type="radio" name="maniobras-combinadas" id="maniobras-combinadas-1" value="1" checked="checked" />
+				    	<label for="maniobras-combinadas-1">1</label>
+
+							<input type="radio" name="maniobras-combinadas" id="maniobras-combinadas-2" value="2"  />
+				    	<label for="maniobras-combinadas-2">2</label>
+				    	
+				    	<input type="radio" name="maniobras-combinadas" id="maniobras-combinadas-3" value="3"  />
+				    	<label for="maniobras-combinadas-3">3</label>
+
+				    	<input type="radio" name="maniobras-combinadas" id="maniobras-combinadas-4" value="4"  />
+				    	<label for="maniobras-combinadas-4">4</label>
+
+				    	<input type="radio" name="maniobras-combinadas" id="maniobras-combinadas-5" value="5"  />
+				    	<label for="maniobras-combinadas-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Técnicas para protección del medio ambiente, calidad y seguridad:</legend>
+				    	<input type="radio" name="medioambiente-calidad-seguridad" id="medioambiente-calidad-seguridad-1" value="1" checked="checked" />
+				    	<label for="medioambiente-calidad-seguridad-1">1</label>
+
+							<input type="radio" name="medioambiente-calidad-seguridad" id="medioambiente-calidad-seguridad-2" value="2"  />
+				    	<label for="medioambiente-calidad-seguridad-2">2</label>
+				    	
+				    	<input type="radio" name="medioambiente-calidad-seguridad" id="medioambiente-calidad-seguridad-3" value="3"  />
+				    	<label for="medioambiente-calidad-seguridad-3">3</label>
+
+				    	<input type="radio" name="medioambiente-calidad-seguridad" id="medioambiente-calidad-seguridad-4" value="4"  />
+				    	<label for="medioambiente-calidad-seguridad-4">4</label>
+
+				    	<input type="radio" name="medioambiente-calidad-seguridad" id="medioambiente-calidad-seguridad-5" value="5"  />
+				    	<label for="medioambiente-calidad-seguridad-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Predisposición:</legend>
+				    	<input type="radio" name="predisposicion" id="predisposicion-1" value="1" checked="checked" />
+				    	<label for="predisposicion-1">1</label>
+
+							<input type="radio" name="predisposicion" id="predisposicion-2" value="2"  />
+				    	<label for="predisposicion-2">2</label>
+				    	
+				    	<input type="radio" name="predisposicion" id="predisposicion-3" value="3"  />
+				    	<label for="predisposicion-3">3</label>
+
+				    	<input type="radio" name="predisposicion" id="predisposicion-4" value="4"  />
+				    	<label for="predisposicion-4">4</label>
+
+				    	<input type="radio" name="predisposicion" id="predisposicion-5" value="5"  />
+				    	<label for="predisposicion-5">5</label>
+						</fieldset>
+					</li>
+					<li>
+						<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
+							<legend>Teoría:</legend>
+				    	<input type="radio" name="teoria" id="teoria-1" value="1" checked="checked" />
+				    	<label for="teoria-1">1</label>
+
+							<input type="radio" name="teoria" id="teoria-2" value="2"  />
+				    	<label for="teoria-2">2</label>
+				    	
+				    	<input type="radio" name="teoria" id="teoria-3" value="3"  />
+				    	<label for="teoria-3">3</label>
+
+				    	<input type="radio" name="teoria" id="teoria-4" value="4"  />
+				    	<label for="teoria-4">4</label>
+
+				    	<input type="radio" name="teoria" id="teoria-5" value="5"  />
+				    	<label for="teoria-5">5</label>
+						</fieldset>
+					</li>
+				</ul>
+	    <!-- </div> -->
+	    <div data-role="fieldcontain">
+	    	<label>La evaluación se aprobará con un puntaje mínimo de 60 
+          Excelente: 5 - Muy Bueno: 4 - Bueno: 3 - Regular: 2
+          Malo: 1
+        </label>
+        <div style="text-align: center; font-weight: bold;" id="calificacionOperador"></div>
+      </div>
+      <div data-role="fieldcontain">
+	    	<label>CONCLUYE LA EVALUACIÓN CON RESULTADO:</label>
+        <div style="text-align: center; font-weight: bold;" id="calificacionAprov"></div>
+      </div>
+	    <div data-role="fieldcontain">
+        <a href="#" data-role="button" data-icon="check" id="submit">Dar de alta</a>
+      </div>
+    </div>
+  </div><!-- /content -->
+
+</div><!-- /page -->
+	<script type="text/javascript">
+		var formulario = function() {
+			this.$addMachineBtn   = $('#addMachine');
+			this.$client          = $("#client");
+			this.$name            = $('#name');
+			this.$lastname        = $('#lastname');
+			this.$addMachineInput = $('#machine');
+			this.$ulListItems     = $('#ulList');
+			this.$observaciones   = $('#observaciones');
+			this.$checkbox0       = $('#checkbox-mini-0'); // operario activo en el curso
+			this.$checkbox1       = $('#checkbox-mini-1'); // operario con conocimiento
+			this.$checkbox2       = $('#checkbox-mini-2'); // renovacion carnet
+			this.$checkbox3       = $('#checkbox-mini-3'); // operario provisorio
+			this.$checkbox4       = $('#checkbox-mini-4'); // operario no calificado
+			this.$checkbox5       = $('#checkbox-mini-5'); // calificado
+
+			this.calificacion = 0;
+			this.machines     = [];
+			this.opActivo     = false;
+			this.opInactivo   = false;
+			this.opRenovar    = false;
+			this.opProvisorio = false;
+			this.opNoCalifica = false;
+			this.opCalificado = false;
+			this.rutinaDiaria        = 0;
+			this.mantenimientoBasico = 0;
+			this.izajeAccesorios     = 0;
+			this.limpiezaHigiene     = 0;
+			this.usoEquipo           = 0;
+			this.operacionSegura     = 0;
+			this.transito            = 0;
+			this.trabajo             = 0;
+			this.documentacionEquipo = 0;
+			this.tecnicaConduccion   = 0;
+			this.tecnicaOperacion    = 0;
+			this.coordinacionManiobras = 0;
+			this.maniobrasRiesgo       = 0;
+			this.sensibilidadMano      = 0;
+			this.diagramaCargaIzaje    = 0;
+			this.maniobraMaxDistancia  = 0;
+			this.maniobrasCombinadas   = 0;
+			this.medioambienteCalidadSeguridad = 0;
+			this.predisposicion                = 0;
+			this.teoria                        = 0;
+			this.aprovado                      = '';
+
+			this.init();
+		}
+
+		formulario.prototype = {
+			init: function() {
+				var self = this;
+
+				$('#addMachine').buttonMarkup({ theme: "a" });
+				$('#submit').buttonMarkup({ theme: "a" });
+
+				self.bindButtons();
+			},
+			// bind buttons
+			bindButtons: function() {
+				var self = this;
+
+				self.$addMachineBtn.on('click', function() {
+					if(self.$addMachineInput.val().trim().length > 0) {
+						self.$ulListItems.append('<li id="' + self.$addMachineInput.val() + '"><a href="#" class="ulItems" data-id="' + self.$addMachineInput.val() + '">' + self.$addMachineInput.val() + '</a></li>');
+						self.machines.push(self.$addMachineInput.val());
+						self.$addMachineInput.val('');
+						self.$ulListItems.listview('refresh');
+					}
+				});
+
+				// elimina items de la lista de equipos que opera
+				$(document).on('click', '.ulItems', function() {
+					var id = $(this).attr('data-id');
+					var liItem = '#' + id;
+					var remove = self.machines.indexOf(id);
+					if(remove > -1) self.machines.splice(remove, 1);
+					$(liItem).remove();
+					self.$ulListItems.listview('refresh');
+				});
+
+				self.$checkbox0.on('click', function() {
+					var opcion0 = $('#checkbox-mini-0:checked').val();
+					typeof opcion0 === 'undefined' ? self.opActivo = false : self.opActivo = true;
+				})
+
+				self.$checkbox1.on('click', function() {
+					var opcion1 = $('#checkbox-mini-1:checked').val();
+					typeof opcion1 === 'undefined' ? self.opInactivo = false : self.opInactivo = true;
+				})
+
+				self.$checkbox2.on('click', function() {
+					var opcion2 = $('#checkbox-mini-2:checked').val();
+					typeof opcion2 === 'undefined' ? self.opRenovar = false : self.opRenovar = true;
+				})
+
+				self.$checkbox3.on('click', function() {
+					var opcion3 = $('#checkbox-mini-3:checked').val();
+					typeof opcion3 === 'undefined' ? self.opProvisorio = false : self.opProvisorio = true;
+				})
+
+				self.$checkbox4.on('click', function() {
+					var opcion4 = $('#checkbox-mini-4:checked').val();
+					typeof opcion4 === 'undefined' ? self.opNoCalifica = false : self.opNoCalifica = true;
+				})
+
+				self.$checkbox5.on('click', function() {
+					var opcion5 = $('#checkbox-mini-5:checked').val();
+					typeof opcion5 === 'undefined' ? self.opCalificado = false : self.opCalificado = true;
+				})
+
+				// para calcular la calificacion del operario a medida que va puntuando
+				$("input[type=radio]").on("click", function() {
+					self.calificacion = 0;
+				  $("input[type=radio]:checked").each(function() {
+				  	self.calificacion += parseInt($(this).val(), 10) ;
+
+				  	switch($(this).attr('name')) {
+				  		case 'rutina-diaria': {
+				  			self.rutinaDiaria = $(this).val();
+				  			break;
+				  		}
+				  		case 'mantenimiento-basico': {
+				  			self.mantenimientoBasico = $(this).val();
+				  			break;
+				  		}
+				  		case 'izaje-accesorios': {
+				  			self.izajeAccesorios = $(this).val();
+				  			break;
+				  		}
+				  		case 'limpieza-higiene': {
+				  			self.limpiezaHigiene = $(this).val();
+				  			break;
+				  		}
+				  		case 'uso-equipo': {
+				  			self.usoEquipo = $(this).val();
+				  			break;
+				  		}
+				  		case 'operacion-segura': {
+				  			self.operacionSegura = $(this).val();
+				  			break;
+				  		}
+				  		case 'transito': {
+				  			self.transito = $(this).val();
+				  			break;
+				  		}
+				  		case 'trabajo': {
+				  			self.trabajo = $(this).val();
+				  			break;
+				  		}
+				  		case 'documentacion-equipo': {
+				  			self.documentacionEquipo = $(this).val();
+				  			break;
+				  		}
+				  		case 'tecnica-conduccion': {
+				  			self.tecnicaConduccion = $(this).val();
+				  			break;
+				  		}
+				  		case 'tecnica-operacion': {
+				  			self.tecnicaOperacion = $(this).val();
+				  			break;
+				  		}
+				  		case 'coordinacion-maniobras': {
+				  			self.coordinacionManiobras = $(this).val();
+				  			break;
+				  		}
+				  		case 'maniobras-riesgo': {
+				  			self.maniobrasRiesgo = $(this).val();
+				  			break;
+				  		}
+				  		case 'sensibilidad-mano': {
+				  			self.sensibilidadMano = $(this).val();
+				  			break;
+				  		}
+				  		case 'diagrama-carga-izaje': {
+				  			self.diagramaCargaIzaje = $(this).val();
+				  			break;
+				  		}
+				  		case 'maniobra-max-distancia': {
+				  			self.maniobraMaxDistancia = $(this).val();
+				  			break;
+				  		}
+				  		case 'maniobras-combinadas': {
+				  			self.maniobrasCombinadas = $(this).val();
+				  			break;
+				  		}
+				  		case 'medioambiente-calidad-seguridad': {
+				  			self.medioambienteCalidadSeguridad = $(this).val();
+				  			break;
+				  		}
+				  		case 'predisposicion': {
+				  			self.predisposicion = $(this).val();
+				  			break;
+				  		}
+				  		case 'teoria': {
+				  			self.teoria = $(this).val();
+				  			break;
+				  		}
+				  		default: {}
+				  	}
+				  });
+				  $('#calificacionOperador').html(self.calificacion)
+				  if(self.calificacion < 60) {
+				  	self.aprovado = 'NO APROVADO';
+				  	$('#calificacionAprov').html('NO APROBADO')
+				  } else {
+				  	self.aprovado = 'APROVADO';
+				  	$('#calificacionAprov').html('APROBADO')
+				  }
+				});
+
+				// devuelve el valor de determinado radiobutton
+				$("input[name=rutina-diaria]").on("click", function() {
+				  var n = $("input[name=rutina-diaria]:checked").val();
+				  self.rutinaDiaria = parseInt(n, 10);
+				});
+
+				$('#submit').on('click', function() {
+					var toApi = {
+						cliente                   : self.$client.val(),
+						nombre                    : self.$name.val(),
+						appellido                 : self.$lastname.val(),
+						equipos                   : self.machines,
+						operador_participativo    : self.opActivo,
+						operador_no_participativo : self.opInactivo,
+						renovar                   : self.opRenovar,
+						operador_provisorio       : self.opProvisorio,
+						operador_no_califica      : self.opNoCalifica,
+						operador_calificado       : self.opCalificado,
+						observaciones             : self.$observaciones.val().trim(),
+						rutina_diaria             : self.rutinaDiaria,
+						mantenimiento_basico      : self.mantenimientoBasico,
+						izaje_accesorios          : self.izajeAccesorios,
+						limpieza_higiene          : self.limpiezaHigiene,
+						uso_equipo                : self.usoEquipo,
+						operacion_segura          : self.operacionSegura,
+						senal_transito            : self.transito,
+						maniobra_trabajo          : self.trabajo,
+						documentacion_equipo      : self.documentacionEquipo,
+						tecnica_conduccion        : self.tecnicaConduccion,
+						tecnica_operacion         : self.tecnicaOperacion,
+						coord_maniobra_combinada  : self.maniobrasCombinadas,
+						maniobra_riesgo           : self.maniobrasRiesgo,
+						sensibilidad_mano         : self.sensibilidadMano,
+						diagrama_carga_izaje      : self.diagramaCargaIzaje,
+						maniobra_max_distancia    : self.maniobraMaxDistancia,
+						maniobras_combinadas      : self.maniobrasCombinadas,
+						medambiente_calidad_seg   : self.medioambienteCalidadSeguridad,
+						predisposicion            : self.predisposicion,
+						teoria                    : self.teoria,
+						calificacion              : self.calificacion,
+						aprov                     : self.aprovado
+					}
+
+					console.log(JSON.stringify(toApi, null, 2))
+				});
+			}
+		};
+
+		(function(){
+			var Formulario = new formulario();
+		})()
+		// setTimeout(function() {
+		// 	$.mobile.loading('show');
+		//   	setTimeout(function() {
+		//   		$.mobile.loading('hide');
+		//   	}, 4000);
+		// }, 1000);
+  </script>
+</body>
+</html>
