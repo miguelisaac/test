@@ -17,6 +17,11 @@
 
   <div data-role="content">
     <div id="form">
+    	<div data-role="fieldcontain">
+        <label for="name">Foto:</label>
+        <a href="#" data-role="button" data-icon="plus" id="takeOpPhoto">Tomar foto</a>
+        <img id="opImg" src="">
+      </div>
       <div data-role="fieldcontain">
 		    <label for="client" class="select">Cliente:</label>
 		    <select name="client" id="client">
@@ -544,6 +549,25 @@
 			// bind buttons
 			bindButtons: function() {
 				var self = this;
+
+				/**
+				 * Warning: Using DATA_URL is not recommended! The DATA_URL destination
+				 * type is very memory intensive, even with a low quality setting. Using it
+				 * can result in out of memory errors and application crashes. Use FILE_URI
+				 * or NATIVE_URI instead.
+				 */
+				navigator.camera.getPicture(onSuccess, onFail, { quality: 25,
+				    destinationType: Camera.DestinationType.DATA_URL
+				});
+
+				function onSuccess(imageData) {
+				    var image = document.getElementById('opImg');
+				    image.src = "data:image/jpeg;base64," + imageData;
+				}
+
+				function onFail(message) {
+				    alert('Failed because: ' + message);
+				}
 
 				self.$addMachineBtn.on('click', function() {
 					if(self.$addMachineInput.val().trim().length > 0) {
