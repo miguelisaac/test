@@ -2,8 +2,14 @@
 <html> 
 <head> 
   <title>Alta de operarios</title> 
-  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+  <style type="text/css">
+  	#opImg {
+  		width: 300px;
+  	}
+  </style>
+  <script type="text/javascript" src="cordova.js"></script>
   <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
   <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 </head> 
@@ -17,6 +23,11 @@
 
   <div data-role="content">
     <div id="form">
+    	<div data-role="fieldcontain">
+        <label for="name">Foto:</label>
+        <a href="#" data-role="button" data-icon="plus" id="takeOpPhoto">Tomar foto</a>
+        <img id="opImg" src="">
+      </div>
       <div data-role="fieldcontain">
 		    <label for="client" class="select">Cliente:</label>
 		    <select name="client" id="client">
@@ -28,11 +39,24 @@
 			</div>
       <div data-role="fieldcontain">
         <label for="name">Nombre:</label>
-        <input type="text" name="name" id="name" value=""  />
+        <input type="text" name="name" id="name" value="" />
       </div>
       <div data-role="fieldcontain">
         <label for="lastname">Apellido:</label>
-        <input type="text" name="lastname" id="lastname" value=""  />
+        <input type="text" name="lastname" id="lastname" value="" />
+      </div>
+      <div data-role="fieldcontain">
+		    <label for="tipo_doc" class="select">Tipo de document:</label>
+		    <select name="tipo_doc" id="tipo_doc">
+		      <option value="0">Seleccione</option>
+		      <option value="dni">DNI</option>
+		      <option value="cedula">Cedula</option>
+		      <option value="pasaporte">Pasaporte</option>
+		    </select>
+			</div>
+			<div data-role="fieldcontain">
+        <label for="nro_doc">Nro de documento:</label>
+        <input type="text" name="nro_doc" id="nro_doc" value="" />
       </div>
       <div data-role="fieldcontain">
         <label for="machine">Equipo que opera:</label>
@@ -44,6 +68,11 @@
 					
 				</ul>
       </div>
+      <div data-role="fieldcontain">
+        <label for="cap_max">Cap. Max:</label>
+        <input type="text" name="cap_max" id="cap_max" value="" />
+      </div>
+      <hr>
       <!-- <div data-role="fieldcontain"> -->
 	      <ul data-role="listview" id="itemsListInstruccion">
 					<li data-role="list-divider">
@@ -489,8 +518,11 @@
 			this.$client          = $("#client");
 			this.$name            = $('#name');
 			this.$lastname        = $('#lastname');
+			this.$tipoDoc         = $('#tipo_doc');
+			this.$nroDoc          = $('#nro_doc');
 			this.$addMachineInput = $('#machine');
 			this.$ulListItems     = $('#ulList');
+			this.$capMax          = $('#cap_max');
 			this.$observaciones   = $('#observaciones');
 			this.$checkbox0       = $('#checkbox-mini-0'); // operario activo en el curso
 			this.$checkbox1       = $('#checkbox-mini-1'); // operario con conocimiento
@@ -499,6 +531,7 @@
 			this.$checkbox4       = $('#checkbox-mini-4'); // operario no calificado
 			this.$checkbox5       = $('#checkbox-mini-5'); // calificado
 
+			this.opImg = '';
 			this.calificacion = 0;
 			this.machines     = [];
 			this.opActivo     = false;
@@ -544,6 +577,34 @@
 			// bind buttons
 			bindButtons: function() {
 				var self = this;
+
+				function onSuccess(imageData) {
+			    var image = document.getElementById('opImg');
+			    image.src = "data:image/jpeg;base64," + imageData;
+			    self.opImg = imageData;
+				}
+
+				function onFail(message) {
+			    alert('Failed because: ' + JSON.stringify(message, null, 2));
+				}
+
+				$('#takeOpPhoto').on('click', function() {
+					/**
+					 * Warning: Using DATA_URL is not recommended! The DATA_URL destination
+					 * type is very memory intensive, even with a low quality setting. Using it
+					 * can result in out of memory errors and application crashes. Use FILE_URI
+					 * or NATIVE_URI instead.
+					 */
+					navigator.camera.getPicture(onSuccess, onFail, { 
+						quality: 70,
+				    destinationType: Camera.DestinationType.DATA_URL,
+				    encodingType: Camera.EncodingType.JPEG,
+				    allowEdit: true,
+				    // correctOrientation: true
+				    targetWidth: 300,
+  					targetHeight: 300
+					});
+				});
 
 				self.$addMachineBtn.on('click', function() {
 					if(self.$addMachineInput.val().trim().length > 0) {
@@ -701,11 +762,20 @@
 				});
 
 				$('#submit').on('click', function() {
+					$.mobile.loading('show',{
+						text: 'Guardando operario...Aguarde',
+						textVisible: true,
+						theme: 'a'
+					});
 					var toApi = {
+						opImg                     : self.opImg,
 						cliente                   : self.$client.val(),
 						nombre                    : self.$name.val(),
-						appellido                 : self.$lastname.val(),
+						apellido                  : self.$lastname.val(),
+						tipo_doc                  : self.$tipoDoc.val(),
+						nro_doc                   : self.$nroDoc.val(),
 						equipos                   : self.machines,
+						cap_max                   : self.$capMax.val(),
 						operador_participativo    : self.opActivo,
 						operador_no_participativo : self.opInactivo,
 						renovar                   : self.opRenovar,
@@ -738,6 +808,19 @@
 					}
 
 					console.log(JSON.stringify(toApi, null, 2))
+					$.ajax({
+						type: 'POST',
+						url: 'https://api.dev.watcha.live:5000/v1/operario',
+						data: JSON.stringify(toApi)
+					})
+					  .done(function(response) {
+					  	$.mobile.loading('hide');
+					  	alert("respuesta del server: ", JSON.stringify(response, null, 2))
+					  })
+					  .fail(function(error) {
+					  	$.mobile.loading('hide');
+					  	alert("error: ", JSON.stringify(error, null, 2))
+					  })
 				});
 			}
 		};

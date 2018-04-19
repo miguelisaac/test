@@ -1,11 +1,11 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "HelloCordova",
-  "short_name": "HelloCordova",
-  "version": "io.cordova.hellocordova",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
-  "author": "Apache Cordova Team",
+  "name": "CCM",
+  "short_name": "CCM",
+  "version": "com.ccmcontrolsrl.www",
+  "description": "Aplicacion para el alta de operadores",
+  "author": "isaacmiguel@gmail.com",
   "icons": [],
   "start_url": "index.html"
 }
