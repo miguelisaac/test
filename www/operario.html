@@ -2,8 +2,14 @@
 <html> 
 <head> 
   <title>Alta de operarios</title> 
-  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+  <style type="text/css">
+  	#opImg {
+  		width: 300px;
+  	}
+  </style>
+  <script type="text/javascript" src="cordova.js"></script>
   <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
   <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 </head> 
@@ -24,7 +30,7 @@
       </div>
       <div data-role="fieldcontain">
 		    <label for="client" class="select">Cliente:</label>
-		    <select name="client" id="client">
+		    <select name="client" id="client" required="">
 		      <option value="0">Seleccione</option>
 		      <option value="1">Cliente 1</option>
 		      <option value="2">Cliente 2</option>
@@ -33,11 +39,11 @@
 			</div>
       <div data-role="fieldcontain">
         <label for="name">Nombre:</label>
-        <input type="text" name="name" id="name" value=""  />
+        <input type="text" name="name" id="name" value="" required=""  />
       </div>
       <div data-role="fieldcontain">
         <label for="lastname">Apellido:</label>
-        <input type="text" name="lastname" id="lastname" value=""  />
+        <input type="text" name="lastname" id="lastname" value="" required=""  />
       </div>
       <div data-role="fieldcontain">
         <label for="machine">Equipo que opera:</label>
@@ -49,6 +55,7 @@
 					
 				</ul>
       </div>
+      <hr>
       <!-- <div data-role="fieldcontain"> -->
 	      <ul data-role="listview" id="itemsListInstruccion">
 					<li data-role="list-divider">
@@ -504,6 +511,7 @@
 			this.$checkbox4       = $('#checkbox-mini-4'); // operario no calificado
 			this.$checkbox5       = $('#checkbox-mini-5'); // calificado
 
+			this.opImg = '';
 			this.calificacion = 0;
 			this.machines     = [];
 			this.opActivo     = false;
@@ -550,24 +558,33 @@
 			bindButtons: function() {
 				var self = this;
 
-				/**
-				 * Warning: Using DATA_URL is not recommended! The DATA_URL destination
-				 * type is very memory intensive, even with a low quality setting. Using it
-				 * can result in out of memory errors and application crashes. Use FILE_URI
-				 * or NATIVE_URI instead.
-				 */
-				navigator.camera.getPicture(onSuccess, onFail, { quality: 25,
-				    destinationType: Camera.DestinationType.DATA_URL
-				});
-
 				function onSuccess(imageData) {
-				    var image = document.getElementById('opImg');
-				    image.src = "data:image/jpeg;base64," + imageData;
+			    var image = document.getElementById('opImg');
+			    image.src = "data:image/jpeg;base64," + imageData;
+			    self.opImg = imageData;
 				}
 
 				function onFail(message) {
-				    alert('Failed because: ' + message);
+			    alert('Failed because: ' + JSON.stringify(message, null, 2));
 				}
+
+				$('#takeOpPhoto').on('click', function() {
+					/**
+					 * Warning: Using DATA_URL is not recommended! The DATA_URL destination
+					 * type is very memory intensive, even with a low quality setting. Using it
+					 * can result in out of memory errors and application crashes. Use FILE_URI
+					 * or NATIVE_URI instead.
+					 */
+					navigator.camera.getPicture(onSuccess, onFail, { 
+						quality: 70,
+				    destinationType: Camera.DestinationType.DATA_URL,
+				    encodingType: Camera.EncodingType.JPEG,
+				    allowEdit: true,
+				    // correctOrientation: true
+				    targetWidth: 300,
+  					targetHeight: 300
+					});
+				});
 
 				self.$addMachineBtn.on('click', function() {
 					if(self.$addMachineInput.val().trim().length > 0) {
@@ -726,6 +743,7 @@
 
 				$('#submit').on('click', function() {
 					var toApi = {
+						opImg                     : self.opImg,
 						cliente                   : self.$client.val(),
 						nombre                    : self.$name.val(),
 						appellido                 : self.$lastname.val(),
@@ -761,7 +779,18 @@
 						aprov                     : self.aprovado
 					}
 
-					console.log(JSON.stringify(toApi, null, 2))
+					// console.log(JSON.stringify(toApi, null, 2))
+					$.ajax({
+						type: 'POST',
+						url: 'https://api.dev.watcha.live:5000/v1/operario',
+						data: toApi
+					})
+					  .done(function(response) {
+					  	console.log("respuesta del server: ", JSON.stringify(response, null, 2))
+					  })
+					  .fail(function(error) {
+					  	console.log("error: ", JSON.stringify(error, null, 2))
+					  })
 				});
 			}
 		};
