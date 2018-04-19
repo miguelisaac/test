@@ -767,6 +767,9 @@
 						textVisible: true,
 						theme: 'a'
 					});
+
+					$('#submit').prop("disabled", true);
+
 					var toApi = {
 						opImg                     : self.opImg,
 						cliente                   : self.$client.val(),
@@ -811,14 +814,16 @@
 					$.ajax({
 						type: 'POST',
 						url: 'https://api.dev.watcha.live:5000/v1/operario',
-						data: JSON.stringify(toApi)
+						data: toApi
 					})
 					  .done(function(response) {
 					  	$.mobile.loading('hide');
+					  	$('#submit').prop("disabled", false);
 					  	alert("respuesta del server: ", JSON.stringify(response, null, 2))
 					  })
 					  .fail(function(error) {
 					  	$.mobile.loading('hide');
+					  	$('#submit').prop("disabled", false);
 					  	alert("error: ", JSON.stringify(error, null, 2))
 					  })
 				});

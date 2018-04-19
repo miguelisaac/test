@@ -768,7 +768,7 @@
 						theme: 'a'
 					});
 
-					$('#submit').prop("disabled", true);
+					$('#submit').hide();
 
 					var toApi = {
 						opImg                     : self.opImg,
@@ -818,12 +818,12 @@
 					})
 					  .done(function(response) {
 					  	$.mobile.loading('hide');
-					  	$('#submit').prop("disabled", false);
+					  	$('#submit').show();
 					  	alert("respuesta del server: ", JSON.stringify(response, null, 2))
 					  })
 					  .fail(function(error) {
 					  	$.mobile.loading('hide');
-					  	$('#submit').prop("disabled", false);
+					  	$('#submit').show();
 					  	alert("error: ", JSON.stringify(error, null, 2))
 					  })
 				});
