@@ -8,6 +8,10 @@
   	#opImg {
   		width: 300px;
   	}
+
+  	#errorReports{
+  		display: none;
+  	}
   </style>
   <script type="text/javascript" src="cordova.js"></script>
   <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
@@ -21,7 +25,7 @@
   <h1>Alta de operarios</h1>
   </div><!-- /header -->
 
-  <div data-role="content">
+  <div data-role="content" id="content">
     <div id="form">
     	<div data-role="fieldcontain">
         <label for="name">Foto:</label>
@@ -32,9 +36,6 @@
 		    <label for="client" class="select">Cliente:</label>
 		    <select name="client" id="client">
 		      <option value="0">Seleccione</option>
-		      <option value="1">Cliente 1</option>
-		      <option value="2">Cliente 2</option>
-		      <option value="3">Cliente 3</option>
 		    </select>
 			</div>
       <div data-role="fieldcontain">
@@ -510,10 +511,13 @@
       </div>
     </div>
   </div><!-- /content -->
+  <div id="errorReports"></div>
 
 </div><!-- /page -->
 	<script type="text/javascript">
 		var formulario = function() {
+			this.$content         = $('#content');
+			this.$errorReports    = $('#errorReports');
 			this.$addMachineBtn   = $('#addMachine');
 			this.$client          = $("#client");
 			this.$name            = $('#name');
@@ -572,7 +576,32 @@
 				$('#addMachine').buttonMarkup({ theme: "a" });
 				$('#submit').buttonMarkup({ theme: "a" });
 
-				self.bindButtons();
+				self.populateClients();
+			},
+			populateClients: function() {
+				var self = this;
+				$.ajax({
+					type: 'GET',
+					url: 'https://api.dev.watcha.live:5000/v1/cliente/'
+				})
+				  .done(function(clientes) {
+				  	for(var c of clientes.response) {
+				  		var option = '<option value="'+c._id+'">'+c.razon+'</option>';
+				  		self.$client.append(option);
+				  	}
+
+				  	self.bindButtons();
+				  })
+				  .fail(function(error) {
+				  	self.cantInit(error);
+				  })
+			},
+			cantInit: function(error) {
+				var self = this;
+
+				self.$content.hide();
+				self.$errorReports.show();
+				self.$errorReports.html(JSON.stringify(error, null, 2));
 			},
 			// bind buttons
 			bindButtons: function() {
@@ -768,7 +797,7 @@
 						theme: 'a'
 					});
 
-					$('#submit').prop("disabled", true);
+					$('#submit').hide();
 
 					var toApi = {
 						opImg                     : self.opImg,
@@ -818,12 +847,12 @@
 					})
 					  .done(function(response) {
 					  	$.mobile.loading('hide');
-					  	$('#submit').prop("disabled", false);
+					  	$('#submit').show();
 					  	alert("respuesta del server: ", JSON.stringify(response, null, 2))
 					  })
 					  .fail(function(error) {
 					  	$.mobile.loading('hide');
-					  	$('#submit').prop("disabled", false);
+					  	$('#submit').show();
 					  	alert("error: ", JSON.stringify(error, null, 2))
 					  })
 				});
