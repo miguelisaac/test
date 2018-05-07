@@ -894,6 +894,7 @@
 					  })
 					  .fail(function(error) {
 					  	alert(JSON.stringify(error))
+					  	alert(error.responseText)
 					  	$.mobile.loading('hide');
 					  	self.$submit.show();
 					  	var errorResponse = '';
