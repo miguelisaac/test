@@ -893,7 +893,7 @@
 					  	alert("respuesta del server: ", JSON.stringify(response, null, 2))
 					  })
 					  .fail(function(error) {
-					  	console.log(error)
+					  	alert(JSON.stringify(error))
 					  	$.mobile.loading('hide');
 					  	self.$submit.show();
 					  	var errorResponse = '';
