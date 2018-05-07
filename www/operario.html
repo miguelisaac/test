@@ -562,7 +562,7 @@
 			this.medioambienteCalidadSeguridad = 0;
 			this.predisposicion                = 0;
 			this.teoria                        = 0;
-			this.aprovado                      = '';
+			this.aprovado                      = 'NO APROBADO';
 			this.clientPopulated               = false;
 			this.isPopupBasicVisible           = false;
 			this._bindButtons                  = false;
@@ -893,7 +893,6 @@
 					  	alert("respuesta del server: ", JSON.stringify(response, null, 2))
 					  })
 					  .fail(function(error) {
-					  	alert(JSON.stringify(error))
 					  	alert(error.responseText)
 					  	$.mobile.loading('hide');
 					  	self.$submit.show();
