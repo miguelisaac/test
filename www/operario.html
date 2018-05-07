@@ -894,14 +894,10 @@
 					  })
 					  .fail(function(error) {
 					  	alert(JSON.stringify(error))
-					  	alert(error.responseText)
+					  	alert(error.responseText.response)
 					  	$.mobile.loading('hide');
 					  	self.$submit.show();
-					  	var errorResponse = '';
-					  	error.responseText.response 
-					  	  ? errorResponse = error.responseText.response
-					  	  : errorResponse = 'El servidor no responde' 
-					  	self.onAjaxCalls(errorResponse);
+					  	self.onAjaxCalls(error.responseText.response);
 					  })
 				});
 			}
