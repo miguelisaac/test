@@ -894,10 +894,10 @@
 					  })
 					  .fail(function(error) {
 					  	alert(JSON.stringify(error))
-					  	alert(error.responseText.response)
+					  	alert(error.responseText)
 					  	$.mobile.loading('hide');
 					  	self.$submit.show();
-					  	self.onAjaxCalls(error.responseText.response);
+					  	self.onAjaxCalls(error.responseText);
 					  })
 				});
 			}
