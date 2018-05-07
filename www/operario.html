@@ -893,11 +893,12 @@
 					  	alert("respuesta del server: ", JSON.stringify(response, null, 2))
 					  })
 					  .fail(function(error) {
-					  	alert(JSON.stringify(error))
 					  	$.mobile.loading('hide');
 					  	self.$submit.show();
 					  	var errorResponse = '';
-					  	!error.length ? errorResponse = 'El servidor no responde' : errorResponse = error;
+					  	error.responseText.response 
+					  	  ? errorResponse = error.responseText.response
+					  	  : errorResponse = 'El servidor no responde' 
 					  	self.onAjaxCalls(errorResponse);
 					  })
 				});
