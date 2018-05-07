@@ -46,17 +46,8 @@
         <label for="lastname">Apellido:</label>
         <input type="text" name="lastname" id="lastname" value="" />
       </div>
-      <div data-role="fieldcontain">
-		    <label for="tipo_doc" class="select">Tipo de document:</label>
-		    <select name="tipo_doc" id="tipo_doc">
-		      <option value="0">Seleccione</option>
-		      <option value="dni">DNI</option>
-		      <option value="cedula">Cedula</option>
-		      <option value="pasaporte">Pasaporte</option>
-		    </select>
-			</div>
 			<div data-role="fieldcontain">
-        <label for="nro_doc">Nro de documento:</label>
+        <label for="nro_doc">DNI:</label>
         <input type="text" name="nro_doc" id="nro_doc" value="" />
       </div>
       <div data-role="fieldcontain">
@@ -511,8 +502,12 @@
       </div>
     </div>
   </div><!-- /content -->
-  <div id="errorReports"></div>
-
+  <div data-role="popup" id="popupBasic">
+		<p>Sin conexión a internet<p>
+	</div>
+	<div data-role="popup" id="popupOnAjaxCalls">
+		<p id="msgContent"><p>
+	</div>
 </div><!-- /page -->
 	<script type="text/javascript">
 		var formulario = function() {
@@ -522,7 +517,6 @@
 			this.$client          = $("#client");
 			this.$name            = $('#name');
 			this.$lastname        = $('#lastname');
-			this.$tipoDoc         = $('#tipo_doc');
 			this.$nroDoc          = $('#nro_doc');
 			this.$addMachineInput = $('#machine');
 			this.$ulListItems     = $('#ulList');
@@ -534,6 +528,10 @@
 			this.$checkbox3       = $('#checkbox-mini-3'); // operario provisorio
 			this.$checkbox4       = $('#checkbox-mini-4'); // operario no calificado
 			this.$checkbox5       = $('#checkbox-mini-5'); // calificado
+			this.$popupBasic      = $('#popupBasic');
+			this.$msgContent      = $('#msgContent');
+			this.$popupOnAjaxCalls = $('#popupOnAjaxCalls');
+			this.$submit           = $('#submit');
 
 			this.opImg = '';
 			this.calificacion = 0;
@@ -565,6 +563,9 @@
 			this.predisposicion                = 0;
 			this.teoria                        = 0;
 			this.aprovado                      = '';
+			this.clientPopulated               = false;
+			this.isPopupBasicVisible           = false;
+			this._bindButtons                  = false;
 
 			this.init();
 		}
@@ -573,13 +574,18 @@
 			init: function() {
 				var self = this;
 
-				$('#addMachine').buttonMarkup({ theme: "a" });
-				$('#submit').buttonMarkup({ theme: "a" });
+				self.$addMachineBtn.buttonMarkup({ theme: "a" });
+				self.$submit.buttonMarkup({ theme: "a" });
 
 				self.populateClients();
 			},
 			populateClients: function() {
+				console.log('populateClients')
 				var self = this;
+
+				if(!self._bindButtons) self.bindButtons();
+				self._bindButtons = true;
+
 				$.ajax({
 					type: 'GET',
 					url: 'https://api.dev.watcha.live:5000/v1/cliente/'
@@ -590,21 +596,56 @@
 				  		self.$client.append(option);
 				  	}
 
-				  	self.bindButtons();
+				  	self.clientPopulated = true;
 				  })
 				  .fail(function(error) {
-				  	self.cantInit(error);
+				  	console.log('fallo el ajax de populateClients')
+				  	var isOnline = self.isOnline();
+				  	isOnline ? self.onAjaxCalls(error.responseText) : self.onOffline();
 				  })
 			},
-			cantInit: function(error) {
+			isOnline: function() {
+				console.log('isOnline')
+				var networkState = navigator.connection.type;
+
+		    var conn = networkState !== Connection.NONE ? true : false;
+		    console.log('isOnline return => ', conn)
+		    return conn;
+			},
+			onAjaxCalls: function(res) {
+				console.log('onAjaxCalls')
+				console.log('onAjaxCalls CONTENT: ', res)
 				var self = this;
 
-				self.$content.hide();
-				self.$errorReports.show();
-				self.$errorReports.html(JSON.stringify(error, null, 2));
+				var resAjax = '';
+				res.length ? resAjax = res : resAjax = "El server no responde";
+
+				self.$msgContent.html(resAjax);
+				self.$popupOnAjaxCalls.popup("open");
+				setTimeout(function() {
+					self.$popupOnAjaxCalls.popup("close");
+				}, 5000);
+			},
+			onOffline: function() {
+				console.log('onOffline')
+				var self = this;
+				
+				self.isPopupBasicVisible = true;
+				$('#popupBasic').popup("open");
+			},
+			onOnline: function() {
+				console.log('onOnline')
+				var self = this;
+				
+				if(self.isPopupBasicVisible) {
+					$('#popupBasic').popup("close");
+					self.isPopupBasicVisible = false;
+				}
+				// if(!self.clientPopulated) self.populateClients();
 			},
 			// bind buttons
 			bindButtons: function() {
+				console.log('bindButtons')
 				var self = this;
 
 				function onSuccess(imageData) {
@@ -790,6 +831,9 @@
 				  self.rutinaDiaria = parseInt(n, 10);
 				});
 
+				document.addEventListener("offline", self.onOffline, false);
+				document.addEventListener("online", self.onOnline, false);
+
 				$('#submit').on('click', function() {
 					$.mobile.loading('show',{
 						text: 'Guardando operario...Aguarde',
@@ -804,7 +848,6 @@
 						cliente                   : self.$client.val(),
 						nombre                    : self.$name.val(),
 						apellido                  : self.$lastname.val(),
-						tipo_doc                  : self.$tipoDoc.val(),
 						nro_doc                   : self.$nroDoc.val(),
 						equipos                   : self.machines,
 						cap_max                   : self.$capMax.val(),
@@ -839,7 +882,6 @@
 						aprov                     : self.aprovado
 					}
 
-					console.log(JSON.stringify(toApi, null, 2))
 					$.ajax({
 						type: 'POST',
 						url: 'https://api.dev.watcha.live:5000/v1/operario',
@@ -847,13 +889,16 @@
 					})
 					  .done(function(response) {
 					  	$.mobile.loading('hide');
-					  	$('#submit').show();
+					  	self.$submit.show();
 					  	alert("respuesta del server: ", JSON.stringify(response, null, 2))
 					  })
 					  .fail(function(error) {
+					  	console.log(error)
 					  	$.mobile.loading('hide');
-					  	$('#submit').show();
-					  	alert("error: ", JSON.stringify(error, null, 2))
+					  	self.$submit.show();
+					  	var errorResponse = '';
+					  	!error.length ? errorResponse = 'El servidor no responde' : errorResponse = error;
+					  	self.onAjaxCalls(errorResponse);
 					  })
 				});
 			}
