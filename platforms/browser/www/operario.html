@@ -3,7 +3,7 @@
 <head> 
   <title>Alta de operarios</title> 
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+  <link rel="stylesheet" href="css/jquery.mobile-1.2.0.min.css" />
   <style type="text/css">
   	#opImg {
   		width: 300px;
@@ -62,9 +62,26 @@
       </div>
       <div data-role="fieldcontain">
         <label for="cap_max">Cap. Max:</label>
-        <input type="text" name="cap_max" id="cap_max" value="" />
+        <input type="number" name="cap_max" id="cap_max" value="" />
+      </div>
+      <div data-role="fieldcontain">
+        <label for="tipo_cap_max">Cap. Max. en:</label>
+        <select name="tipo_cap_max" id="tipo_cap_max">
+		      <option value="0">Seleccione</option>
+		      <option value="kgr">Kgr</option>
+		      <option value="ton">Tonelada</option>
+		    </select>
       </div>
       <hr>
+      	<ul data-role="listview" id="itemsListInstruccion">
+					<li data-role="list-divider">
+						Apto médico
+					</li>
+      		<li>
+						<input type="checkbox" name="checkbox-6" id="checkbox-mini-6" class="custom" data-mini="true" />
+						<label for="checkbox-mini-6">Apto médico</label>
+					</li>
+				</ul>
       <!-- <div data-role="fieldcontain"> -->
 	      <ul data-role="listview" id="itemsListInstruccion">
 					<li data-role="list-divider">
@@ -515,6 +532,7 @@
 			this.$errorReports    = $('#errorReports');
 			this.$addMachineBtn   = $('#addMachine');
 			this.$client          = $("#client");
+			this.$tipo_cap_max    = $("#tipo_cap_max");
 			this.$name            = $('#name');
 			this.$lastname        = $('#lastname');
 			this.$nroDoc          = $('#nro_doc');
@@ -528,6 +546,7 @@
 			this.$checkbox3       = $('#checkbox-mini-3'); // operario provisorio
 			this.$checkbox4       = $('#checkbox-mini-4'); // operario no calificado
 			this.$checkbox5       = $('#checkbox-mini-5'); // calificado
+			this.$checkbox6       = $('#checkbox-mini-6'); // apto medico
 			this.$popupBasic      = $('#popupBasic');
 			this.$msgContent      = $('#msgContent');
 			this.$popupOnAjaxCalls = $('#popupOnAjaxCalls');
@@ -542,6 +561,7 @@
 			this.opProvisorio = false;
 			this.opNoCalifica = false;
 			this.opCalificado = false;
+			this.opAptoMedico = false;
 			this.rutinaDiaria        = 0;
 			this.mantenimientoBasico = 0;
 			this.izajeAccesorios     = 0;
@@ -562,7 +582,7 @@
 			this.medioambienteCalidadSeguridad = 0;
 			this.predisposicion                = 0;
 			this.teoria                        = 0;
-			this.aprovado                      = '';
+			this.aprovado                      = 'NO APROBADO';
 			this.clientPopulated               = false;
 			this.isPopupBasicVisible           = false;
 			this._bindButtons                  = false;
@@ -586,23 +606,23 @@
 				if(!self._bindButtons) self.bindButtons();
 				self._bindButtons = true;
 
-				$.ajax({
-					type: 'GET',
-					url: 'https://api.dev.watcha.live:5000/v1/cliente/'
-				})
-				  .done(function(clientes) {
-				  	for(var c of clientes.response) {
-				  		var option = '<option value="'+c._id+'">'+c.razon+'</option>';
-				  		self.$client.append(option);
-				  	}
+				// $.ajax({
+				// 	type: 'GET',
+				// 	url: 'https://api.dev.watcha.live:5000/v1/cliente/'
+				// })
+				//   .done(function(clientes) {
+				//   	for(var c of clientes.response) {
+				//   		var option = '<option value="'+c._id+'">'+c.razon+'</option>';
+				//   		self.$client.append(option);
+				//   	}
 
 				  	self.clientPopulated = true;
-				  })
-				  .fail(function(error) {
-				  	console.log('fallo el ajax de populateClients')
-				  	var isOnline = self.isOnline();
-				  	isOnline ? self.onAjaxCalls(error.responseText) : self.onOffline();
-				  })
+				  // })
+				  // .fail(function(error) {
+				  // 	console.log('fallo el ajax de populateClients')
+				  // 	var isOnline = self.isOnline();
+				  // 	isOnline ? self.onAjaxCalls(error.responseText) : self.onOffline();
+				  // })
 			},
 			isOnline: function() {
 				console.log('isOnline')
@@ -643,6 +663,72 @@
 				}
 				// if(!self.clientPopulated) self.populateClients();
 			},
+			pushOperador: function() {
+				$.mobile.loading('show',{
+					text: 'Guardando operario...Aguarde',
+					textVisible: true,
+					theme: 'a'
+				});
+
+				$('#submit').hide();
+
+				var toApi = {
+					opImg                     : self.opImg,
+					cliente                   : self.$client.val(),
+					nombre                    : self.$name.val(),
+					apellido                  : self.$lastname.val(),
+					nro_doc                   : self.$nroDoc.val(),
+					equipos                   : self.machines,
+					cap_max                   : self.$capMax.val() + self.$tipo_cap_max.val(),
+					apto_medico               : self.opAptoMedico,
+					operador_participativo    : self.opActivo,
+					operador_no_participativo : self.opInactivo,
+					renovar                   : self.opRenovar,
+					operador_provisorio       : self.opProvisorio,
+					operador_no_califica      : self.opNoCalifica,
+					operador_calificado       : self.opCalificado,
+					observaciones             : self.$observaciones.val().trim(),
+					rutina_diaria             : self.rutinaDiaria,
+					mantenimiento_basico      : self.mantenimientoBasico,
+					izaje_accesorios          : self.izajeAccesorios,
+					limpieza_higiene          : self.limpiezaHigiene,
+					uso_equipo                : self.usoEquipo,
+					operacion_segura          : self.operacionSegura,
+					senal_transito            : self.transito,
+					maniobra_trabajo          : self.trabajo,
+					documentacion_equipo      : self.documentacionEquipo,
+					tecnica_conduccion        : self.tecnicaConduccion,
+					tecnica_operacion         : self.tecnicaOperacion,
+					coord_maniobra_combinada  : self.maniobrasCombinadas,
+					maniobra_riesgo           : self.maniobrasRiesgo,
+					sensibilidad_mano         : self.sensibilidadMano,
+					diagrama_carga_izaje      : self.diagramaCargaIzaje,
+					maniobra_max_distancia    : self.maniobraMaxDistancia,
+					maniobras_combinadas      : self.maniobrasCombinadas,
+					medambiente_calidad_seg   : self.medioambienteCalidadSeguridad,
+					predisposicion            : self.predisposicion,
+					teoria                    : self.teoria,
+					calificacion              : self.calificacion,
+					aprov                     : self.aprovado
+				}
+				
+				$.ajax({
+					type: 'POST',
+					url: 'https://api.dev.watcha.live:5000/v1/operario',
+					data: toApi
+				})
+				  .done(function(response) {
+				  	$.mobile.loading('hide');
+				  	self.$submit.show();
+				  	self.onAjaxCalls("Carga exitosa");
+				  })
+				  .fail(function(error) {
+				  	alert(error.responseText)
+				  	$.mobile.loading('hide');
+				  	self.$submit.show();
+				  	self.onAjaxCalls(error.responseText);
+				  })
+			},
 			// bind buttons
 			bindButtons: function() {
 				console.log('bindButtons')
@@ -677,12 +763,17 @@
 				});
 
 				self.$addMachineBtn.on('click', function() {
-					if(self.$addMachineInput.val().trim().length > 0) {
-						self.$ulListItems.append('<li id="' + self.$addMachineInput.val() + '"><a href="#" class="ulItems" data-id="' + self.$addMachineInput.val() + '">' + self.$addMachineInput.val() + '</a></li>');
-						self.machines.push(self.$addMachineInput.val());
-						self.$addMachineInput.val('');
-						self.$ulListItems.listview('refresh');
+					if(self.machines.length < 3) {
+						if(self.$addMachineInput.val().trim().length > 0) {
+							self.$ulListItems.append('<li id="' + self.$addMachineInput.val() + '"><a href="#" class="ulItems" data-id="' + self.$addMachineInput.val() + '">' + self.$addMachineInput.val() + '</a></li>');
+							self.machines.push(self.$addMachineInput.val());
+							self.$addMachineInput.val('');
+							self.$ulListItems.listview('refresh');
+						}	
+					} else {
+						alert("No puede igresar mas de 3 equipos")
 					}
+					
 				});
 
 				// elimina items de la lista de equipos que opera
@@ -723,6 +814,11 @@
 				self.$checkbox5.on('click', function() {
 					var opcion5 = $('#checkbox-mini-5:checked').val();
 					typeof opcion5 === 'undefined' ? self.opCalificado = false : self.opCalificado = true;
+				})
+
+				self.$checkbox6.on('click', function() {
+					var opcion6 = $('#checkbox-mini-6:checked').val();
+					typeof opcion5 === 'undefined' ? self.opAptoMedico = false : self.opAptoMedico = true;
 				})
 
 				// para calcular la calificacion del operario a medida que va puntuando
@@ -835,71 +931,44 @@
 				document.addEventListener("online", self.onOnline, false);
 
 				$('#submit').on('click', function() {
-					$.mobile.loading('show',{
-						text: 'Guardando operario...Aguarde',
-						textVisible: true,
-						theme: 'a'
-					});
+					var canSubmit = true;
 
-					$('#submit').hide();
+					var subMsg = "Debe ingresar: \n";
 
-					var toApi = {
-						opImg                     : self.opImg,
-						cliente                   : self.$client.val(),
-						nombre                    : self.$name.val(),
-						apellido                  : self.$lastname.val(),
-						nro_doc                   : self.$nroDoc.val(),
-						equipos                   : self.machines,
-						cap_max                   : self.$capMax.val(),
-						operador_participativo    : self.opActivo,
-						operador_no_participativo : self.opInactivo,
-						renovar                   : self.opRenovar,
-						operador_provisorio       : self.opProvisorio,
-						operador_no_califica      : self.opNoCalifica,
-						operador_calificado       : self.opCalificado,
-						observaciones             : self.$observaciones.val().trim(),
-						rutina_diaria             : self.rutinaDiaria,
-						mantenimiento_basico      : self.mantenimientoBasico,
-						izaje_accesorios          : self.izajeAccesorios,
-						limpieza_higiene          : self.limpiezaHigiene,
-						uso_equipo                : self.usoEquipo,
-						operacion_segura          : self.operacionSegura,
-						senal_transito            : self.transito,
-						maniobra_trabajo          : self.trabajo,
-						documentacion_equipo      : self.documentacionEquipo,
-						tecnica_conduccion        : self.tecnicaConduccion,
-						tecnica_operacion         : self.tecnicaOperacion,
-						coord_maniobra_combinada  : self.maniobrasCombinadas,
-						maniobra_riesgo           : self.maniobrasRiesgo,
-						sensibilidad_mano         : self.sensibilidadMano,
-						diagrama_carga_izaje      : self.diagramaCargaIzaje,
-						maniobra_max_distancia    : self.maniobraMaxDistancia,
-						maniobras_combinadas      : self.maniobrasCombinadas,
-						medambiente_calidad_seg   : self.medioambienteCalidadSeguridad,
-						predisposicion            : self.predisposicion,
-						teoria                    : self.teoria,
-						calificacion              : self.calificacion,
-						aprov                     : self.aprovado
+					if(self.machines.length === 0) {
+						canSubmit = false;
+						subMsg += "al menos un equipo para el operario \n";
+					}
+					if(!self.$lastname.val().trim()) {
+						canSubmit = false;
+						subMsg += "un apellido \n";
+					}
+					if(!self.$name.val().trim()) {
+						canSubmit = false;
+						subMsg += "un nombre \n";
+					}
+					if(!self.opImg) {
+						canSubmit = false;
+						subMsg += "cargar una imagen del operario \n";
+					}
+					if(!self.$nroDoc.val().trim()) {
+						canSubmit = false;
+						subMsg += "un numero de documento \n";
+					}
+					if(!self.$capMax.val().trim()) {
+						canSubmit = false;
+						subMsg += "la capacidad maxima del equipo \n";
+					}
+					if(self.$tipo_cap_max.val() == 0) {
+						canSubmit = false;
+						subMsg += "el tipo de carga \n";
 					}
 
-					$.ajax({
-						type: 'POST',
-						url: 'https://api.dev.watcha.live:5000/v1/operario',
-						data: toApi
-					})
-					  .done(function(response) {
-					  	$.mobile.loading('hide');
-					  	self.$submit.show();
-					  	alert("respuesta del server: ", JSON.stringify(response, null, 2))
-					  })
-					  .fail(function(error) {
-					  	console.log(error)
-					  	$.mobile.loading('hide');
-					  	self.$submit.show();
-					  	var errorResponse = '';
-					  	!error.length ? errorResponse = 'El servidor no responde' : errorResponse = error;
-					  	self.onAjaxCalls(errorResponse);
-					  })
+					if(canSubmit) {
+						self.pushOperador();
+					} else {
+						alert(subMsg)
+					}
 				});
 			}
 		};
