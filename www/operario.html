@@ -48,7 +48,7 @@
       </div>
 			<div data-role="fieldcontain">
         <label for="nro_doc">DNI:</label>
-        <input type="text" name="nro_doc" id="nro_doc" value="" />
+        <input type="number" name="nro_doc" id="nro_doc" value="" />
       </div>
       <div data-role="fieldcontain">
         <label for="machine">Equipo que opera:</label>
@@ -664,6 +664,8 @@
 				// if(!self.clientPopulated) self.populateClients();
 			},
 			pushOperador: function() {
+				var self = this;
+
 				$.mobile.loading('show',{
 					text: 'Guardando operario...Aguarde',
 					textVisible: true,
