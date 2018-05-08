@@ -606,23 +606,23 @@
 				if(!self._bindButtons) self.bindButtons();
 				self._bindButtons = true;
 
-				// $.ajax({
-				// 	type: 'GET',
-				// 	url: 'https://api.dev.watcha.live:5000/v1/cliente/'
-				// })
-				//   .done(function(clientes) {
-				//   	for(var c of clientes.response) {
-				//   		var option = '<option value="'+c._id+'">'+c.razon+'</option>';
-				//   		self.$client.append(option);
-				//   	}
+				$.ajax({
+					type: 'GET',
+					url: 'https://api.dev.watcha.live:5000/v1/cliente/'
+				})
+				  .done(function(clientes) {
+				  	for(var c of clientes.response) {
+				  		var option = '<option value="'+c._id+'">'+c.razon+'</option>';
+				  		self.$client.append(option);
+				  	}
 
 				  	self.clientPopulated = true;
-				  // })
-				  // .fail(function(error) {
-				  // 	console.log('fallo el ajax de populateClients')
-				  // 	var isOnline = self.isOnline();
-				  // 	isOnline ? self.onAjaxCalls(error.responseText) : self.onOffline();
-				  // })
+				  })
+				  .fail(function(error) {
+				  	console.log('fallo el ajax de populateClients')
+				  	var isOnline = self.isOnline();
+				  	isOnline ? self.onAjaxCalls(error.responseText) : self.onOffline();
+				  })
 			},
 			isOnline: function() {
 				console.log('isOnline')
