@@ -665,7 +665,7 @@
 			},
 			pushOperador: function() {
 				var self = this;
-				
+
 				$.mobile.loading('show',{
 					text: 'Guardando operario...Aguarde',
 					textVisible: true,
@@ -713,6 +713,8 @@
 					calificacion              : self.calificacion,
 					aprov                     : self.aprovado
 				}
+
+				console.log(toApi)
 				
 				$.ajax({
 					type: 'POST',
@@ -820,7 +822,8 @@
 
 				self.$checkbox6.on('click', function() {
 					var opcion6 = $('#checkbox-mini-6:checked').val();
-					typeof opcion5 === 'undefined' ? self.opAptoMedico = false : self.opAptoMedico = true;
+					typeof opcion6 === 'undefined' ? self.opAptoMedico = false : self.opAptoMedico = true;
+					console.log(self.opAptoMedico)
 				})
 
 				// para calcular la calificacion del operario a medida que va puntuando

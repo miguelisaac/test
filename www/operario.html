@@ -713,6 +713,8 @@
 					calificacion              : self.calificacion,
 					aprov                     : self.aprovado
 				}
+
+				console.log(toApi)
 				
 				$.ajax({
 					type: 'POST',
@@ -723,6 +725,9 @@
 				  	$.mobile.loading('hide');
 				  	self.$submit.show();
 				  	self.onAjaxCalls("Carga exitosa");
+				  	setTimeout(function() {
+				  		location.reload()
+				  	}, 3000);
 				  })
 				  .fail(function(error) {
 				  	alert(error.responseText)
@@ -820,7 +825,7 @@
 
 				self.$checkbox6.on('click', function() {
 					var opcion6 = $('#checkbox-mini-6:checked').val();
-					typeof opcion5 === 'undefined' ? self.opAptoMedico = false : self.opAptoMedico = true;
+					typeof opcion6 === 'undefined' ? self.opAptoMedico = false : self.opAptoMedico = true;
 				})
 
 				// para calcular la calificacion del operario a medida que va puntuando
