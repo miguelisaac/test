@@ -3,7 +3,7 @@
 <head> 
   <title>Alta de operarios</title> 
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+  <link rel="stylesheet" href="css/jquery.mobile-1.2.0.min.css" />
   <style type="text/css">
   	#opImg {
   		width: 300px;
@@ -14,8 +14,8 @@
   	}
   </style>
   <script type="text/javascript" src="cordova.js"></script>
-  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  <script src="js/jquery-1.8.2.min.js"></script>
+  <script src="js/jquery.mobile-1.2.0.min.js"></script>
 </head> 
 <body> 
 
@@ -552,7 +552,7 @@
 			this.$popupOnAjaxCalls = $('#popupOnAjaxCalls');
 			this.$submit           = $('#submit');
 
-			this.opImg = '123';
+			this.opImg = '';
 			this.calificacion = 0;
 			this.machines     = [];
 			this.opActivo     = false;
@@ -606,23 +606,23 @@
 				if(!self._bindButtons) self.bindButtons();
 				self._bindButtons = true;
 
-				// $.ajax({
-				// 	type: 'GET',
-				// 	url: 'https://api.dev.watcha.live:5000/v1/cliente/'
-				// })
-				//   .done(function(clientes) {
-				//   	for(var c of clientes.response) {
-				//   		var option = '<option value="'+c._id+'">'+c.razon+'</option>';
-				//   		self.$client.append(option);
-				//   	}
+				$.ajax({
+					type: 'GET',
+					url: 'https://api.dev.watcha.live:5000/v1/cliente/'
+				})
+				  .done(function(clientes) {
+				  	for(var c of clientes.response) {
+				  		var option = '<option value="'+c._id+'">'+c.razon+'</option>';
+				  		self.$client.append(option);
+				  	}
 
 				  	self.clientPopulated = true;
-				  // })
-				  // .fail(function(error) {
-				  // 	console.log('fallo el ajax de populateClients')
-				  // 	var isOnline = self.isOnline();
-				  // 	isOnline ? self.onAjaxCalls(error.responseText) : self.onOffline();
-				  // })
+				  })
+				  .fail(function(error) {
+				  	console.log('fallo el ajax de populateClients')
+				  	var isOnline = self.isOnline();
+				  	isOnline ? self.onAjaxCalls(error.responseText) : self.onOffline();
+				  })
 			},
 			isOnline: function() {
 				console.log('isOnline')
@@ -725,6 +725,9 @@
 				  	$.mobile.loading('hide');
 				  	self.$submit.show();
 				  	self.onAjaxCalls("Carga exitosa");
+				  	setTimeout(function() {
+				  		location.reload()
+				  	}, 3000);
 				  })
 				  .fail(function(error) {
 				  	alert(error.responseText)
@@ -823,7 +826,6 @@
 				self.$checkbox6.on('click', function() {
 					var opcion6 = $('#checkbox-mini-6:checked').val();
 					typeof opcion6 === 'undefined' ? self.opAptoMedico = false : self.opAptoMedico = true;
-					console.log(self.opAptoMedico)
 				})
 
 				// para calcular la calificacion del operario a medida que va puntuando
